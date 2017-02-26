@@ -24,7 +24,7 @@ module.exports = {
       },
       {
         test: /\.(css)$/,
-        loader: ExtractTextPlugin.extract('css-loader?modules&localIdentName=tictactoe_[local]&sourceMap!postcss?sourceMap=inline')
+        loader: ExtractTextPlugin.extract('css-loader?modules&localIdentName=[local]&sourceMap!postcss?sourceMap=inline')
       }
     ]
   },

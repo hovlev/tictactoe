@@ -2,7 +2,7 @@ import { applyMiddleware, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import actions from '../actions';
 import reducers from '../reducers';
-import sagas from '../sagas';
+// import sagas from '../sagas';
 
 const applyDevTools = () => {
   const win = window;
@@ -12,13 +12,13 @@ const applyDevTools = () => {
   	: undefined;
 };
 
-const sagaMiddleware = createSagaMiddleware();
+// const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(reducers, applyDevTools(), applyMiddleware(sagaMiddleware));
+const store = createStore(reducers, applyDevTools());
 store.subscribe(() => {
   /*eslint no-console:0*/
 });
 
-sagaMiddleware.run(sagas);
+// sagaMiddleware.run(sagas);
 
 export default store;

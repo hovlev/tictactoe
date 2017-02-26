@@ -7,7 +7,7 @@ test('reducers/data - initial state', t => {
 
   t.deepEqual(
     data(undefined, {}),
-    { grids: [] },
+    { board: [] },
     'sets initial state'
   );
 });

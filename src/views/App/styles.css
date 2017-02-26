@@ -1,0 +1,21 @@
+@import '../../variables.css';
+@import '../../resets.css';
+
+.app {
+  background: #eee;
+}
+
+td {
+  border: 1px solid #AAA;
+  height: 10rem;
+  text-align: center;
+  width: 10rem;
+}
+
+.side_x {
+  background: #7CFC00;
+}
+
+.side_o {
+  background: #FF0000;
+}
