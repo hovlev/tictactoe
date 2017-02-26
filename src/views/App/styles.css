@@ -19,3 +19,7 @@ td {
 .side_o {
   background: #FF0000;
 }
+
+.won {
+  opacity: 0.5;
+}

@@ -4,6 +4,7 @@ const init = {
   rows: 4,
   columns: 4,
   toWin: 3,
+  winner: false,
   currentSide: 0,
   sides: ['x', 'o'],
   board: //todo generate this on init based on the above
@@ -16,38 +17,46 @@ const init = {
 };
 
 const directions = {
-  tl: {coords: [-1, -1], opposite: 'br'},
-  t: {coords: [-1, 0], opposite: 'b'},
-  tr: {coords: [-1, 1], opposite: 'bl'},
-  l: {coords: [0, -1], opposite: 'r'},
-  r: {coords: [0, 1], opposite: 'l'},
-  bl: {coords: [1, -1], opposite: 'tr'},
-  b: {coords: [1, 0], opposite: 't'},
-  br: {coords: [1, 1], opposite: 'tl'}
+  tl: {coords: {row: -1, col: -1}, opposite: 'br'},
+  t: {coords: {row: -1, col: 0}, opposite: 'b'},
+  tr: {coords: {row: -1, col: 1}, opposite: 'bl'},
+  l: {coords: {row:0, col: -1}, opposite: 'r'},
+  r: {coords: {row:0, col: 1}, opposite: 'l'},
+  bl: {coords: {row:1, col: -1}, opposite: 'tr'},
+  b: {coords: {row:1, col: 0}, opposite: 't'},
+  br: {coords: {row:1, col: 1}, opposite: 'tl'}
 };
 
 const toCheck = ['tl', 't', 'tr', 'l'];
 
-const checkLine = (row, col, state) => {
-  toCheck.map((position) => {
-    let direction = directions[position];
-    let oppositeDirection = directions[direction.opposite];
-    let toCheck = checkTile(row + direction.coords[0], col + direction.coords[1], state);
-    let toCheckOpposite = checkTile(row + oppositeDirection.coords[0], col + oppositeDirection.coords[1], state);
-    let lineCount = 0;
-    let check = true;
-    let checkOpposite = true;
-    if (toCheck) {
-      lineCount++;
-      console.log(position + ' ' + toCheck);
-
+const checkWinner = (row, col, state) => {
+  for (let position of toCheck) {
+    let direction = directions[position]; // check left, for example
+    let oppositeDirection = directions[direction.opposite]; // then you will also need to check right to see if a line is complete
+    let lineItems = [{row: row, col: col}];
+    lineItems.push(checkLine({row: row + direction.coords.row, col: col + direction.coords.col}, direction, state));
+    lineItems.push(checkLine({row: row + oppositeDirection.coords.row, col: col + oppositeDirection.coords.col}, oppositeDirection, state));
+    lineItems = Array.prototype.concat(...lineItems);
+    if (lineItems.length >= state.toWin) {
+      return { player: state.currentSide, line: lineItems };
     }
-    if (toCheckOpposite) {
-      lineCount++;
-      console.log(direction.opposite + ' ' + toCheckOpposite);
-    }
-  });
+  }
   return false;
+};
+
+const checkLine = (coords, modifier, state) => {
+  let lineItems = [];
+  let firstCheck = checkTile(coords.row, coords.col, state);
+  if (firstCheck) {
+    let check = true;
+    while (check) {
+      lineItems.push({row: coords.row, col: coords.col});
+      coords.row += modifier.coords.row;
+      coords.col += modifier.coords.col;
+      check = checkTile(coords.row, coords.col, state);
+    }   
+  }
+  return lineItems;
 };
 
 const checkTile = (row, col, state) => {
@@ -68,8 +77,25 @@ export default (state = init, action) => {
       let tile = newState.board[action.payload.row][action.payload.column];
       if (!tile) {
         newState.board[action.payload.row][action.payload.column] = newState.sides[newState.currentSide];
-        checkLine(action.payload.row, action.payload.column, newState);
+        newState.winner = checkWinner(action.payload.row, action.payload.column, newState);
+        newState.won = newState.winner ? true : false;
         newState.currentSide = (newState.currentSide + 1) % newState.sides.length;
+      }
+      return newState;
+    case actions.WON_BOARD:
+      newState.paused = true;
+      newState.won = false;
+      return newState;
+    case actions.RESET_BOARD:
+      if (action.payload.won) {
+        newState.board = [
+          [false, false, false, false],
+          [false, false, false, false],
+          [false, false, false, false],
+          [false, false, false, false]
+        ];
+        newState.paused = false;
+        newState.winner = false;
       }
       return newState;
     default:

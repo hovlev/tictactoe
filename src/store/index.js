@@ -8,14 +8,18 @@ const applyDevTools = () => {
   const win = window;
 
   return win.__REDUX_DEVTOOLS_EXTENSION__
-  	? win.__REDUX_DEVTOOLS_EXTENSION__()
-  	: undefined;
+    ? win.__REDUX_DEVTOOLS_EXTENSION__()
+    : undefined;
 };
 
 // const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(reducers, applyDevTools());
 store.subscribe(() => {
+  let data = store.getState().data;
+  if (data.won) {
+    store.dispatch({ type: actions.WON_BOARD });
+  }
   /*eslint no-console:0*/
 });
 
