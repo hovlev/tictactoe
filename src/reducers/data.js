@@ -1,4 +1,4 @@
-import { lensPath, set, view, clone, prop, pipe, nth, update, assoc, length, path } from 'ramda';
+import { prop, pipe, nth, update, assoc, length, path, merge } from 'ramda';
 import helpers  from '../helpers';
 import actions from '../actions';
 
@@ -49,28 +49,26 @@ const selectTile = (payload, state) => {
     // object in which to set the above property and value
     state
   );
-
-  newState = assoc('winner', helpers.checkWinner(payload.row, payload.column, newState), newState);
-  newState = assoc('won', prop('winner', newState) ? true : false, newState);
-  newState = assoc('currentPlayer', (prop('currentPlayer', newState) + 1) % length(prop('sides', newState)), newState);
-  return newState;
+  let winner = helpers.checkWinner(payload.row, payload.column, newState);
+  return merge(newState, {
+    winner: winner,
+    won: winner ? true : false,
+    currentPlayer: (prop('currentPlayer', newState) + 1) % length(prop('sides', newState))
+  });
 };
 
-const resetBoard = (payload, state) => {
-  if (payload.won) {
-    let newState = assoc('board', init.board, state);
-    newState = assoc('paused', false, newState);
-    newState = assoc('winner', false, newState);
-    return newState;
-  }
-  return state;
-};
+const resetBoard = (payload, state) => 
+  payload.won ? merge(state, {
+    board: init.board,
+    paused: false,
+    winner: false
+  }) : state;
 
-const wonBoard = state => {
-  let newState = assoc('paused', true, state);
-  newState = assoc('won', false, newState);
-  return newState;
-}
+const wonBoard = state =>
+  merge(state, {
+    paused: true,
+    won: false
+  });
 
 export default (state = init, { type, payload }) => {
   let newState;
