@@ -1,4 +1,4 @@
-import { lensPath, set, view, clone, prop, pipe } from 'ramda';
+import { lensPath, set, view, clone, prop, pipe, nth, update, assoc, length, path } from 'ramda';
 import helpers  from '../helpers';
 import actions from '../actions';
 
@@ -18,35 +18,72 @@ const init = {
     ]
 };
 
-export default (state = init, action) => {
-  const newState = Object.assign({}, state);
-  switch (action.type) {
+const selectTile = (payload, state) => {
+  // just getting the current tile state
+  let tile = pipe(
+    prop('board'),
+    nth(payload.row),
+    nth(payload.column)
+  )(state);
+
+   // if tile returns false there's an empty space here, so a tile can be turned to a nought or a cross
+  if (tile) return state;
+
+  const currentPlayer = path(
+    ['sides', prop('currentPlayer', state)], 
+    state
+  );
+
+  let newState = assoc(
+    // name of property to update
+    'board',
+    // value to set to above given property
+    update(
+      payload.row, // update the specific row index with the result of pipe
+      pipe(
+        nth(payload.row), // nth row of the board
+        update(payload.column, currentPlayer) // update specific column index in the row with the current player ID
+      )(prop('board', state)),
+      prop('board', state)
+    ),
+    // object in which to set the above property and value
+    state
+  );
+
+  newState = assoc('winner', helpers.checkWinner(payload.row, payload.column, newState), newState);
+  newState = assoc('won', prop('winner', newState) ? true : false, newState);
+  newState = assoc('currentPlayer', (prop('currentPlayer', newState) + 1) % length(prop('sides', newState)), newState);
+  return newState;
+};
+
+const resetBoard = (payload, state) => {
+  if (payload.won) {
+    let newState = assoc('board', init.board, state);
+    newState = assoc('paused', false, newState);
+    newState = assoc('winner', false, newState);
+    return newState;
+  }
+  return state;
+};
+
+const wonBoard = state => {
+  let newState = assoc('paused', true, state);
+  newState = assoc('won', false, newState);
+  return newState;
+}
+
+export default (state = init, { type, payload }) => {
+  let newState;
+  switch (type) {
     case actions.SELECT_TILE:
-      newState.board = [ ...newState.board ];
-      let tile = newState.board[action.payload.row][action.payload.column];
-      if (!tile) {
-        newState.board[action.payload.row][action.payload.column] = newState.sides[newState.currentPlayer];
-        newState.winner = helpers.checkWinner(action.payload.row, action.payload.column, newState);
-        newState.won = newState.winner ? true : false;
-        newState.currentPlayer = (newState.currentPlayer + 1) % newState.sides.length;
-      }
-      return newState;
+      return selectTile(payload, state);
+
     case actions.WON_BOARD:
-      newState.paused = true;
-      newState.won = false;
-      return newState;
+      return wonBoard(state);
+
     case actions.RESET_BOARD:
-      if (action.payload.won) {
-        newState.board = [
-          [false, false, false, false],
-          [false, false, false, false],
-          [false, false, false, false],
-          [false, false, false, false]
-        ];
-        newState.paused = false;
-        newState.winner = false;
-      }
-      return newState;
+      return resetBoard(payload, state);
+
     default:
       return state;
   }
