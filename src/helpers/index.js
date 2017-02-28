@@ -51,4 +51,7 @@ const checkTile = (row, col, state) => {
   return false;
 };
 
-export default {checkWinner: checkWinner, checkLine: checkLine, checkTile: checkTile};
+const countFreeTiles = (state) => 
+  [].concat(...state.board).filter(value => !value).length;
+
+export default {checkWinner: checkWinner, checkLine: checkLine, checkTile: checkTile, countFreeTiles: countFreeTiles};

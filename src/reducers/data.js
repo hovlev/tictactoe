@@ -9,6 +9,7 @@ const init = {
   maxSetting: 9,
   winner: false,
   currentPlayer: 0,
+  computerPlayer: 0, // computer will select a tile if this is the current player
   sides: ['x', 'o'],
   score: [],
   previousBoards: [],
@@ -62,11 +63,13 @@ const selectTile = (payload, state) => {
     state
   );
   let winner = helpers.checkWinner(payload.row, payload.column, newState);
-  return merge(newState, {
-    winner: winner,
-    won: winner ? true : false,
-    currentPlayer: (prop('currentPlayer', newState) + 1) % length(prop('sides', newState))
-  });
+  return helpers.countFreeTiles(newState) ? // checks if there are still free tiles available (if there aren't it is a stalemate and the board is reset)
+    merge(newState, {
+      winner: winner,
+      won: winner ? true : false,
+      currentPlayer: (prop('currentPlayer', newState) + 1) % length(prop('sides', newState))
+    }) 
+    : resetBoard(newState);
 };
 
 const resetBoard = state => 
