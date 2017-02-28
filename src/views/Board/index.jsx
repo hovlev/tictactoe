@@ -1,21 +1,27 @@
 import actions from '../../actions';
 import { connect } from 'react-redux';
 import Table from './Table';
+import Input from './Input';
 
 const Board = ({ dispatch, state }) =>
   <div>
-    <form className="rules" onSubmit={e => { e.preventDefault(); dispatch({ type: actions.CHANGE_RULES, payload: e }); }}>
-      <label>Rows <input type="text" placeholder={state.data.rows} /></label>
-      <label>Columns <input type="text" placeholder={state.data.columns} /></label>
-      <label>Length to win <input type="text" placeholder={state.data.toWin} /></label>
-      <button>Change rules</button>
+    <form className="rules" onSubmit={e => { e.preventDefault(); dispatch({ type: actions.RESET_BOARD})}}>
+      <Input type='rows' label='Rows' dispatch={dispatch} state={state.data.rows} />
+      <Input type='columns' label='Columns' dispatch={dispatch} state={state.data.columns} />
+      <Input type='toWin' label='Length to Win' dispatch={dispatch} state={state.data.toWin} />
+      <button>Reset with rules</button>
     </form>
-    <div className={state.data.winner ? 'won' : ''}>
-      <div className="current_game" onClick={() => { dispatch({ type: actions.RESET_BOARD, payload: {won: state.data.winner} }); }}>
+
+    <ul>
+      <li className="current_game">
         <Table dispatch={dispatch} board={state.data.board} />
-      </div>
-      <div className="previous_games">{state.data.previousBoards.map((table) => <Table dispatch={dispatch} board={table} />)}</div>
-    </div>
+      </li>
+      {state.data.previousBoards.map((table) => 
+        <li>
+          <Table dispatch={dispatch} board={table} forDisplayPurposesOnly={true} />
+        </li>
+      )}
+    </ul>
   </div>;
 
 export default connect(state => ({

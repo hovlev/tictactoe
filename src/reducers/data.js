@@ -58,22 +58,21 @@ const selectTile = (payload, state) => {
   });
 };
 
-const resetBoard = (payload, state) => 
-  payload.won ? merge(state, {
-    board: init.board,
-    paused: false,
-    winner: false
-  }) : state;
-
-const wonBoard = state => 
+const resetBoard = state => 
   merge(state, {
-    paused: true,
+    board: init.board,
+    winner: false
+  });
+
+const wonBoard = state =>
+  merge(state, {
+    board: init.board,
     won: false,
     previousBoards: prepend(prop('board', state), prop('previousBoards', state))
   });
 
-const changeRules = state => 
-  state;
+const changeRules = (payload, state) => console.log(payload.type, payload.value) ||
+  assoc(payload.type, parseInt(payload.value), state);
 
 export default (state = init, { type, payload }) => {
   switch (type) {
@@ -87,8 +86,7 @@ export default (state = init, { type, payload }) => {
       return resetBoard(payload, state);
 
     case actions.CHANGE_RULES:
-      console.log('change rules', payload);
-      return changeRules(state);
+      return changeRules(payload, state);
 
     default:
       return state;

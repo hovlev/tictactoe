@@ -38,7 +38,7 @@ input:focus {
 }
 
 label, button {
-  border-right: 1px solid #222;
+  border-right: 0.5rem solid #222;
   color: #666;
   display: inline-block;
   padding: 0.5rem;
@@ -64,24 +64,32 @@ h1 em {
 }
 
 td {
-  border: 1px solid #555;
+  border: 0.5rem solid #555;
+  color: #000;
   height: 3rem;
   text-align: center;
   width: 3rem;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
 .side_x {
   background: #7CFC00;
+  border-color: #7CFC00;
 }
 
 .side_o {
   background: #FF0000;
+  border-color: #FF0000;
 }
 
 .current_game {
   background: #222;
-}
-
-.previous_games {
-
 }
