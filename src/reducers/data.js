@@ -1,4 +1,4 @@
-import { prop, pipe, nth, update, assoc, length, path, merge, prepend, times, always } from 'ramda';
+import { prop, pipe, nth, update, assoc, length, path, merge, prepend, times, always, adjust, add } from 'ramda';
 import helpers  from '../helpers';
 import actions from '../actions';
 
@@ -10,6 +10,7 @@ const init = {
   winner: false,
   currentPlayer: 0,
   sides: ['x', 'o'],
+  score: [],
   previousBoards: [],
   board: []
     // [
@@ -25,6 +26,9 @@ const buildBoard = state =>
     always(times(always(false), state.columns)),
     state.rows
   );
+
+const buildScore = state =>
+  times(always(0), state.sides.length);
 
 const selectTile = (payload, state) => {
   // just getting the current tile state
@@ -68,14 +72,15 @@ const selectTile = (payload, state) => {
 const resetBoard = state => 
   merge(state, {
     board: buildBoard(state),
-    winner: false
+    score: buildScore(state)
   });
 
 const wonBoard = state =>
   merge(state, {
-    won: false,
     board: buildBoard(state),
-    previousBoards: prepend(prop('board', state), prop('previousBoards', state))
+    previousBoards: prepend(prop('board', state), prop('previousBoards', state)),
+    score: adjust(add(1), state.winner.player, prop('score', state)),
+    won: false
   });
 
 const changeRules = (payload, state) => {

@@ -5,11 +5,13 @@ import Input from './Input';
 
 const Board = ({ dispatch, state }) =>
   <div>
-    <div className={`current_player side_${state.data.sides[state.data.currentPlayer]}`}></div>         
+    <div className={`current_player side_${state.data.sides[state.data.currentPlayer]}`}></div>
     <form className="rules" onSubmit={e => { e.preventDefault(); dispatch({ type: actions.RESET_BOARD})}}>
+      <div className="score side_x">{state.data.score[0]}</div>
       <Input type='rows' label='Rows' dispatch={dispatch} state={state.data.rows} />
       <Input type='columns' label='Columns' dispatch={dispatch} state={state.data.columns} />
       <Input type='toWin' label='Length to Win' dispatch={dispatch} state={state.data.toWin} />
+      <div className="score side_o">{state.data.score[1]}</div>
     </form>
     <ul>
       <li className="current_game">

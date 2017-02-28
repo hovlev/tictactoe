@@ -39,15 +39,14 @@ input:focus {
   outline: none;
 }
 
-label:last-child {
-  border-right: none;
-}
-
 label, button {
-  border-right: 0.5rem solid #222;
   color: #666;
   display: inline-block;
   padding: 0.5rem;
+}
+
+.score {
+  margin: 0.5rem;
 }
 
 button {
@@ -107,6 +106,20 @@ li {
 .side_o {
   background: #FF0000;
   border-color: #FF0000;
+}
+
+.score {
+  background: none;
+  color: #000;
+  display: inline-block;
+}
+
+.score.side_x {
+  color: #7CFC00;
+}
+
+.score.side_o {
+  color: #FF0000;
 }
 
 .current_game {
