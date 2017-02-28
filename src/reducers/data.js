@@ -1,4 +1,4 @@
-import { prop, pipe, nth, update, assoc, length, path, merge } from 'ramda';
+import { prop, pipe, nth, update, assoc, length, path, merge, prepend } from 'ramda';
 import helpers  from '../helpers';
 import actions from '../actions';
 
@@ -9,6 +9,7 @@ const init = {
   winner: false,
   currentPlayer: 0,
   sides: ['x', 'o'],
+  previousBoards: [],
   board: //todo generate this on init based on the above
     [
       [false, false, false, false],
@@ -64,14 +65,14 @@ const resetBoard = (payload, state) =>
     winner: false
   }) : state;
 
-const wonBoard = state =>
+const wonBoard = state => 
   merge(state, {
     paused: true,
-    won: false
+    won: false,
+    previousBoards: prepend(prop('board', state), prop('previousBoards', state))
   });
 
 export default (state = init, { type, payload }) => {
-  let newState;
   switch (type) {
     case actions.SELECT_TILE:
       return selectTile(payload, state);

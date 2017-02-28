@@ -1,15 +1,67 @@
 @import '../../variables.css';
 @import '../../resets.css';
 
-.app {
-  background: #eee;
+body {
+  box-sizing: border-box;
+  background: #000;
+  color: #FFF;
+  font-family: Courier, Arial;
+  text-transform: uppercase;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 1rem;
+}
+
+form, table {
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+}
+
+form {
+  background: #333;
+  font-size: 0.75rem;
+}
+
+input {
+  background: none;
+  border: none;
+  color: #FFF;
+  text-align: right;
+  width: 1rem;
+}
+
+label {
+  border-right: 1px solid #222;
+  color: #666;
+  display: inline-block;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+label:last-child {
+  border-right: none;
+}
+
+h1 {
+  font-weight: normal;
+  font-size: 1rem;
+  margin: 1rem 1rem;
+  text-align: center;
+}
+
+h1 em {
+  font-style: italic;
+  text-transform: lowercase;
 }
 
 td {
-  border: 1px solid #AAA;
-  height: 10rem;
+  border: 1px solid #555;
+  height: 3rem;
   text-align: center;
-  width: 10rem;
+  width: 3rem;
 }
 
 .side_x {
@@ -20,6 +72,10 @@ td {
   background: #FF0000;
 }
 
-.won {
-  opacity: 0.5;
+.current_game {
+  background: #222;
+}
+
+.previous_games {
+
 }
