@@ -5,13 +5,12 @@ import Input from './Input';
 
 const Board = ({ dispatch, state }) =>
   <div>
+    <div className={`current_player side_${state.data.sides[state.data.currentPlayer]}`}></div>         
     <form className="rules" onSubmit={e => { e.preventDefault(); dispatch({ type: actions.RESET_BOARD})}}>
       <Input type='rows' label='Rows' dispatch={dispatch} state={state.data.rows} />
       <Input type='columns' label='Columns' dispatch={dispatch} state={state.data.columns} />
       <Input type='toWin' label='Length to Win' dispatch={dispatch} state={state.data.toWin} />
-      <button>Reset with rules</button>
     </form>
-
     <ul>
       <li className="current_game">
         <Table dispatch={dispatch} board={state.data.board} />
@@ -22,6 +21,7 @@ const Board = ({ dispatch, state }) =>
         </li>
       )}
     </ul>
+
   </div>;
 
 export default connect(state => ({

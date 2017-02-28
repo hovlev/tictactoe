@@ -15,6 +15,7 @@ const applyDevTools = () => {
 // const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(reducers, applyDevTools());
+store.dispatch({ type: actions.INIT_GAME });
 store.subscribe(() => {
   let data = store.getState().data;
   if (data.won) {

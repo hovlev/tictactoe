@@ -1,4 +1,4 @@
-import { prop, pipe, nth, update, assoc, length, path, merge, prepend } from 'ramda';
+import { prop, pipe, nth, update, assoc, length, path, merge, prepend, times, always } from 'ramda';
 import helpers  from '../helpers';
 import actions from '../actions';
 
@@ -6,18 +6,25 @@ const init = {
   rows: 4,
   columns: 4,
   toWin: 3,
+  maxSetting: 9,
   winner: false,
   currentPlayer: 0,
   sides: ['x', 'o'],
   previousBoards: [],
-  board: //todo generate this on init based on the above
-    [
-      [false, false, false, false],
-      [false, false, false, false],
-      [false, false, false, false],
-      [false, false, false, false]
-    ]
+  board: []
+    // [
+    //   [false, false, false, false],
+    //   [false, false, false, false],
+    //   [false, false, false, false],
+    //   [false, false, false, false]
+    // ]
 };
+
+const buildBoard = state =>
+  times(
+    always(times(always(false), state.columns)),
+    state.rows
+  );
 
 const selectTile = (payload, state) => {
   // just getting the current tile state
@@ -60,30 +67,35 @@ const selectTile = (payload, state) => {
 
 const resetBoard = state => 
   merge(state, {
-    board: init.board,
+    board: buildBoard(state),
     winner: false
   });
 
 const wonBoard = state =>
   merge(state, {
-    board: init.board,
     won: false,
+    board: buildBoard(state),
     previousBoards: prepend(prop('board', state), prop('previousBoards', state))
   });
 
-const changeRules = (payload, state) => console.log(payload.type, payload.value) ||
-  assoc(payload.type, parseInt(payload.value), state);
+const changeRules = (payload, state) => {
+  let newState = assoc(payload.type, 
+    Math.max(1, Math.min(parseInt(payload.value), prop('maxSetting', state))), 
+    state);
+  newState = resetBoard(newState);
+  return newState;
+};
 
 export default (state = init, { type, payload }) => {
   switch (type) {
+    case actions.INIT_GAME:
+      return resetBoard(state);
+
     case actions.SELECT_TILE:
       return selectTile(payload, state);
 
     case actions.WON_BOARD:
       return wonBoard(state);
-
-    case actions.RESET_BOARD:
-      return resetBoard(payload, state);
 
     case actions.CHANGE_RULES:
       return changeRules(payload, state);
