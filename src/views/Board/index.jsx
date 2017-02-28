@@ -4,10 +4,11 @@ import Table from './Table';
 
 const Board = ({ dispatch, state }) =>
   <div>
-    <form className="rules">
+    <form className="rules" onSubmit={e => { e.preventDefault(); dispatch({ type: actions.CHANGE_RULES, payload: e }); }}>
       <label>Rows <input type="text" placeholder={state.data.rows} /></label>
       <label>Columns <input type="text" placeholder={state.data.columns} /></label>
       <label>Length to win <input type="text" placeholder={state.data.toWin} /></label>
+      <button>Change rules</button>
     </form>
     <div className={state.data.winner ? 'won' : ''}>
       <div className="current_game" onClick={() => { dispatch({ type: actions.RESET_BOARD, payload: {won: state.data.winner} }); }}>

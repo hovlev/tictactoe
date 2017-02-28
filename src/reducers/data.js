@@ -72,6 +72,9 @@ const wonBoard = state =>
     previousBoards: prepend(prop('board', state), prop('previousBoards', state))
   });
 
+const changeRules = state => 
+  state;
+
 export default (state = init, { type, payload }) => {
   switch (type) {
     case actions.SELECT_TILE:
@@ -82,6 +85,10 @@ export default (state = init, { type, payload }) => {
 
     case actions.RESET_BOARD:
       return resetBoard(payload, state);
+
+    case actions.CHANGE_RULES:
+      console.log('change rules', payload);
+      return changeRules(state);
 
     default:
       return state;
