@@ -8,14 +8,15 @@ import actions from '../actions';
 const init = {
   rows: 4,
   columns: 4,
-  toWin: 3,
-  maxSetting: 9,
+  toWin: 3, // if this is set too high it's potentially impossible to win (can't fit enough tiles into a grid)
+  maxSetting: 9, // very basic validation, can only have up to 9 rows, columns etc
   winner: false,
   currentPlayer: 0,
-  computerPlayer: 0, // computer will select a tile if this is the current player
-  sides: [ 'x', 'o' ],
-  score: [],
-  previousBoards: [],
+  computerPlayer: false, // computer will select a tile if this is the current player (should be 0 or 1)
+  paused: false, // used for when the computer is 'thinking'
+  sides: [ 'x', 'o' ], // no reason why you can't have more than 2 players, interface won't cater for this though
+  score: [], // built on init action, maybe use get function or alternative
+  previousBoards: [], // as above
   board: []
     // [
     //   [false, false, false, false],
@@ -45,7 +46,6 @@ const selectTile = (payload, state) => {
     nth(payload.row),
     nth(payload.column)
   )(state);
-
    // if tile returns false there's an empty space here, so a tile can be turned to a nought or a cross
   if (tile) return state;
 
@@ -107,13 +107,19 @@ export default (state = init, { type, payload }) => {
       return resetBoard(state);
 
     case actions.SELECT_TILE:
-      return selectTile(payload, state);
+      return prop('currentPlayer', state) === prop('computerPlayer', state) ? state : selectTile(payload, state);
 
     case actions.ARTIFICIAL_SELECT_TILE:
       return artificialIntelligence(state);
 
     case actions.WON_BOARD:
       return wonBoard(state);
+
+    case actions.PAUSE_BOARD:
+      return assoc('paused', payload, state);
+
+    case actions.TOGGLE_AI:
+      return assoc('computerPlayer', prop('computerPlayer', state) === false ? 0 : false, state);
 
     case actions.CHANGE_RULES:
       return changeRules(payload, state);

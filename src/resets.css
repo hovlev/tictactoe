@@ -1,17 +1,5 @@
 @import 'variables.css';
 
-/* ==========================================================================
-Reset
-
-* Baseline
-* Layout
-* Text
-* Actions and inputs
-========================================================================== */
-
-/* Baseline
-========================================================================== */
-
 body {
   background: #fff;
   color: #333;
@@ -23,9 +11,6 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Layout
-========================================================================== */
-
 *,
 *::before,
 *::after {
@@ -35,9 +20,6 @@ body {
 main {
   display: block;
 }
-
-/* Text
-========================================================================== */
 
 dfn {
   font-style: italic;
@@ -79,9 +61,6 @@ pre {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
-
-/* Actions and inputs
-========================================================================== */
 
 a {
   text-decoration: none;
@@ -142,7 +121,7 @@ input[type="search"] {
 
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
+  -webkit-appearance: none;
   margin: 0; 
 }
 

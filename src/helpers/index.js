@@ -1,3 +1,4 @@
+// mappings used by the checkLine logic
 const directions = {
   tl: { coords: { row: -1, col: -1 }, opposite: 'br' },
   t: { coords: { row: -1, col: 0 }, opposite: 'b' },
@@ -9,8 +10,11 @@ const directions = {
   br: { coords: { row: 1, col: 1 }, opposite: 'tl' }
 };
 
+// quick shorthand, always needs to check in both directions so the opposite attribute above is utilised
 const toCheck = [ 'tl', 't', 'tr', 'l' ];
 
+// logic to check that a line of a certain length has been reached, so whether a player has won, checks tiles surrounding the selected tile
+// using 'checkLine'
 const checkWinner = (row, col, state) => {
   for (const position of toCheck) {
     const direction = directions[position]; // check left, for example
@@ -26,6 +30,7 @@ const checkWinner = (row, col, state) => {
   return false;
 };
 
+// checks in a certain direction for whether a tile owned by a specific player exists, returns an array of these tiles
 const checkLine = (coords, modifier, state) => {
   const lineItems = [];
   const firstCheck = checkTile(coords.row, coords.col, state);
@@ -41,6 +46,7 @@ const checkLine = (coords, modifier, state) => {
   return lineItems;
 };
 
+// very simply checks whether the tile belongs to a player
 const checkTile = (row, col, state) => {
   if (row >= 0 && col >= 0 && row < state.rows && col < state.columns) {
     const checkTile = state.board[row][col];
@@ -51,12 +57,14 @@ const checkTile = (row, col, state) => {
   return false;
 };
 
+// counts the current free tiles, used to calculate a stalemate
 const countFreeTiles = (state) => 
   [].concat(...state.board).filter(value => !value).length;
 
+// this is the artificial intelligence... the first available tile is fetched, and that is automatically plumped for.
 const getFirstTile = (state) => {
   const firstFalse = [].concat(...state.board).findIndex(value => !value);
-  const row = Math.floor(firstFalse / state.rows);
+  const row = Math.floor(firstFalse / state.columns);
   return { row: row, column: firstFalse - (row * state.columns) };
 };
 

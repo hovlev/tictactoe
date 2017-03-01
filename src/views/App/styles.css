@@ -1,6 +1,10 @@
 @import '../../variables.css';
 @import '../../resets.css';
 
+/**
+  TODO: Less half-arsed CSS, there's nothing really 'css-modules' about this yet
+*/
+
 body {
   box-sizing: border-box;
   background: #000;
@@ -18,6 +22,14 @@ table {
 form, table {
   margin: 0 auto;
   position: relative;
+}
+
+a {
+  color: #666;
+}
+
+a.active {
+  color: #FFF;
 }
 
 form {
