@@ -1,5 +1,6 @@
 import {
-  add, adjust, always, assoc, length, merge, nth, path, pipe, prepend, prop, times, update
+  add, adjust, always, assoc, length, merge, nth, 
+  path, pipe, prepend, prop, times, update
 } from 'ramda';
 import helpers  from '../helpers';
 import actions from '../actions';

@@ -60,4 +60,10 @@ const getFirstTile = (state) => {
   return { row: row, column: firstFalse - (row * state.columns) };
 };
 
-export default { checkWinner: checkWinner, checkLine: checkLine, checkTile: checkTile, countFreeTiles: countFreeTiles, getFirstTile: getFirstTile };
+export default {
+  checkWinner,
+  checkLine,
+  checkTile,
+  countFreeTiles,
+  getFirstTile
+};
