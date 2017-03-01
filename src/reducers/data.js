@@ -12,7 +12,7 @@ const init = {
   winner: false,
   currentPlayer: 0,
   computerPlayer: 0, // computer will select a tile if this is the current player
-  sides: ['x', 'o'],
+  sides: [ 'x', 'o' ],
   score: [],
   previousBoards: [],
   board: []
@@ -39,7 +39,7 @@ const buildScore = state =>
 
 const selectTile = (payload, state) => {
   // just getting the current tile state
-  let tile = pipe(
+  const tile = pipe(
     prop('board'),
     nth(payload.row),
     nth(payload.column)
@@ -49,11 +49,11 @@ const selectTile = (payload, state) => {
   if (tile) return state;
 
   const currentPlayer = path(
-    ['sides', prop('currentPlayer', state)], 
+    [ 'sides', prop('currentPlayer', state) ], 
     state
   );
 
-  let newState = assoc(
+  const newState = assoc(
     // name of property to update
     'board',
     // value to set to above given property
@@ -68,7 +68,7 @@ const selectTile = (payload, state) => {
     // object in which to set the above property and value
     state
   );
-  let winner = helpers.checkWinner(payload.row, payload.column, newState);
+  const winner = helpers.checkWinner(payload.row, payload.column, newState);
   return helpers.countFreeTiles(newState) ? // checks if there are still free tiles available (if there aren't it is a stalemate and the board is reset)
     merge(newState, {
       winner: winner,
@@ -88,7 +88,7 @@ const wonBoard = state =>
   merge(state, {
     board: buildBoard(state),
     previousBoards: prepend(prop('board', state), prop('previousBoards', state)),
-    score: adjust(add(1), path(['winner', 'player'], state), prop('score', state)),
+    score: adjust(add(1), path([ 'winner', 'player' ], state), prop('score', state)),
     won: false
   });
 
