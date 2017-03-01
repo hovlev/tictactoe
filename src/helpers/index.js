@@ -54,4 +54,10 @@ const checkTile = (row, col, state) => {
 const countFreeTiles = (state) => 
   [].concat(...state.board).filter(value => !value).length;
 
-export default {checkWinner: checkWinner, checkLine: checkLine, checkTile: checkTile, countFreeTiles: countFreeTiles};
+const getFirstTile = (state) => {
+  let firstFalse = [].concat(...state.board).findIndex(value => !value);
+  let row = Math.floor(firstFalse / state.rows);
+  return {row: row, column: firstFalse - (row * state.columns)};
+};
+
+export default {checkWinner: checkWinner, checkLine: checkLine, checkTile: checkTile, countFreeTiles: countFreeTiles, getFirstTile: getFirstTile};

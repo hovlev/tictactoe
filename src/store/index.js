@@ -15,14 +15,18 @@ const applyDevTools = () => {
 // const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(reducers, applyDevTools());
-store.dispatch({ type: actions.INIT_GAME });
 store.subscribe(() => {
   let data = store.getState().data;
   if (data.won) {
     store.dispatch({ type: actions.WON_BOARD });
+  } else if (data.computerPlayer === data.currentPlayer) {
+    setTimeout(() => {
+      store.dispatch({ type: actions.ARTIFICIAL_SELECT_TILE });
+    }, 500);
   }
   /*eslint no-console:0*/
 });
+store.dispatch({ type: actions.INIT_GAME });
 
 // sagaMiddleware.run(sagas);
 

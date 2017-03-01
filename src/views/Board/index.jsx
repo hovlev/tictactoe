@@ -17,8 +17,8 @@ const Board = ({ dispatch, state }) =>
       <li className="current_game">
         <Table dispatch={dispatch} board={state.data.board} />
       </li>
-      {state.data.previousBoards.map((table) => 
-        <li>
+      {state.data.previousBoards.map((table, i) => 
+        <li key={i}>
           <Table dispatch={dispatch} board={table} forDisplayPurposesOnly={true} />
         </li>
       )}

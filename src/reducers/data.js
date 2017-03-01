@@ -1,4 +1,6 @@
-import { prop, pipe, nth, update, assoc, length, path, merge, prepend, times, always, adjust, add } from 'ramda';
+import {
+  add, adjust, always, assoc, length, merge, nth, path, pipe, prepend, prop, times, update
+} from 'ramda';
 import helpers  from '../helpers';
 import actions from '../actions';
 
@@ -20,6 +22,10 @@ const init = {
     //   [false, false, false, false],
     //   [false, false, false, false]
     // ]
+};
+
+const artificialIntelligence = state => {
+  return selectTile(helpers.getFirstTile(state), state);
 };
 
 const buildBoard = state =>
@@ -82,7 +88,7 @@ const wonBoard = state =>
   merge(state, {
     board: buildBoard(state),
     previousBoards: prepend(prop('board', state), prop('previousBoards', state)),
-    score: adjust(add(1), state.winner.player, prop('score', state)),
+    score: adjust(add(1), path(['winner', 'player'], state), prop('score', state)),
     won: false
   });
 
@@ -101,6 +107,9 @@ export default (state = init, { type, payload }) => {
 
     case actions.SELECT_TILE:
       return selectTile(payload, state);
+
+    case actions.ARTIFICIAL_SELECT_TILE:
+      return artificialIntelligence(state);
 
     case actions.WON_BOARD:
       return wonBoard(state);

@@ -5,7 +5,9 @@ const Table = ({ dispatch, board, forDisplayPurposesOnly }) =>
     <table>
       <tbody>
         {board.map((row, i) =>
-          <tr>{row.map((tile, j) => <Tile dispatch={dispatch} row={i} column={j} side={board[i][j]} forDisplayPurposesOnly={forDisplayPurposesOnly} />)}</tr>
+          <tr key={i}>{row.map((tile, j) => 
+          	<Tile key={j} dispatch={dispatch} row={i} column={j} side={board[i][j]} forDisplayPurposesOnly={forDisplayPurposesOnly} />)}
+          </tr>
         )}
       </tbody>
     </table>;
